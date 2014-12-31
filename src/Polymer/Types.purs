@@ -3,6 +3,7 @@ module Polymer.Types
     , ElementNameError(..)
     , PolymerElement(..)
     , PolymerProto(..)
+    , PolymerElementError(..)
     , elementNameStr
     , mkElementName
     ) where
@@ -20,18 +21,32 @@ data ElementNameError = ENBlank
                       | ENMissingDash
 
 
+-------------------------------------------------------------------------------
 newtype ElementName = ElementName String
 
+
+-------------------------------------------------------------------------------
 elementNameStr :: ElementName -> String
 elementNameStr (ElementName s) = s
 
+
+-------------------------------------------------------------------------------
 mkElementName :: String -> Either ElementNameError ElementName
 mkElementName s
     | S.null s    = Left ENBlank
     | selem "-" s = Right $ ElementName s
     | otherwise   = Left ENMissingDash
 
+
+-------------------------------------------------------------------------------
 --TODO: smart constructor
 data PolymerElement = PolymerElement ElementName Markup PolymerProto
 
+
+-------------------------------------------------------------------------------
 data PolymerProto = PolymerProto
+
+
+-------------------------------------------------------------------------------
+--TODO: is it practical to validate expressions?
+data PolymerElementError = PEInvalidBind String
