@@ -1,0 +1,24 @@
+{
+  "name": "purescript-polymer",
+  "version": "0.0.0",
+  "authors": [
+    "Michael Xavier <michael@michaelxavier.net>"
+  ],
+  "description": "Purescript bindings to Polymer",
+  "keywords": [
+    "purescript",
+    "polymer"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "~0.5.2",
+    "purescript-smolder": "~1.0.2"
+  }
+}

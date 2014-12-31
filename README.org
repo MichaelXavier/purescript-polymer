@@ -1,0 +1,3 @@
+* Brainstorming
+  Could provide a node-based compiler that compiles the template to
+  static HTML as well as the JS.
