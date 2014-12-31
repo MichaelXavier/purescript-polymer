@@ -20,4 +20,4 @@ compile (PolymerElement n mu proto) = polymerElement n mu
 
 
 polymerElement :: ElementName -> Markup -> Markup
-polymerElement (ElementName n) mu = parent "polymer-element" ! name n $ mu
+polymerElement n mu = parent "polymer-element" ! name (elementNameStr n) $ mu

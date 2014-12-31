@@ -19,6 +19,8 @@
   ],
   "dependencies": {
     "polymer": "~0.5.2",
-    "purescript-smolder": "~1.0.2"
+    "purescript-smolder": "~1.0.2",
+    "purescript-either": "~0.1.4",
+    "purescript-strings": "~0.4.2"
   }
 }
