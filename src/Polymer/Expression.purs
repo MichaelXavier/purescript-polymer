@@ -1,5 +1,6 @@
 module Polymer.Expression where
 
+-------------------------------------------------------------------------------
 data ProtoAttr proto a = ProtoAttr String (proto -> a)
 
 
@@ -19,7 +20,7 @@ class E (i :: * -> *) where
   plus :: i Number -> i Number -> i Number
   minus :: i Number -> i Number -> i Number
   mult :: i Number -> i Number -> i Number
-  div :: i Number -> i Number -> i Number
+  div' :: i Number -> i Number -> i Number
   mod:: i Number -> i Number -> i Number
 
   -- Boolean logic
@@ -53,7 +54,7 @@ instance ePretty :: E PP where
   plus = binop "+"
   minus = binop "-"
   mult = binop "*"
-  div = binop "/"
+  div' = binop "/"
   mod = binop "*"
 
 
@@ -70,6 +71,12 @@ runPP (PP a) = a
 
 
 -------------------------------------------------------------------------------
+--TODO: only export this
+renderExpression :: forall a. Expression a -> String
+renderExpression e = "{{" ++ runPP e ++ "}}"
+
+
+-------------------------------------------------------------------------------
 --TODO: drop this example code
 data MyProto = MyProto Boolean
 
@@ -79,3 +86,8 @@ protoValAttr = ProtoAttr "protoVal" protoVal
 
 example :: String
 example = runPP $ ((lit 5 `minus` lit 2) `mod` (lit 2)) `gte` lit 3
+
+
+-------------------------------------------------------------------------------
+type Expression a = PP a
+

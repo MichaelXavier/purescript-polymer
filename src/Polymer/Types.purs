@@ -24,6 +24,10 @@ import Polymer.Util
 data ElementNameError = ENBlank
                       | ENMissingDash
 
+instance showElementNameError :: Show ElementNameError where
+  show ENBlank = "ENBlank"
+  show ENMissingDash = "ENMissingDash"
+
 
 -------------------------------------------------------------------------------
 newtype ElementName = ElementName String
@@ -54,18 +58,23 @@ attributeNameStr (AttributeName s) = s
 -------------------------------------------------------------------------------
 mkAttributeName :: String -> Either AttributeNameError AttributeName
 mkAttributeName s
-    | S.null s    = Left ANBlank
-    | selem "-" s = Right $ AttributeName s
+    | S.null s  = Left ANBlank
+    | otherwise = Right $ AttributeName s
 
 
 -------------------------------------------------------------------------------
 data AttributeNameError = ANBlank
+
+instance showAttributeNameError :: Show AttributeNameError where
+  show ANBlank = "ANBlank"
 
 
 -------------------------------------------------------------------------------
 --TODO: smart constructor
 newtype PolymerElement = PolymerElement {
       name :: ElementName
+      --TODO: maybe have a separate property for template? do you
+      --always want a template?
     , markup :: Markup
     , attributes :: [AttributeName]
     --TODO: proto, attributes, etc
