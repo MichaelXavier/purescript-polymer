@@ -22,3 +22,11 @@ dist/purescript-polymer.js : $(DEPS) $(SRCS)
 	for f in $^; do \
 		echo :m $$f >> $@; \
 	done
+
+watch :
+	@while true; do \
+		inotifywait -q -r -e modify,close_write,move,create,delete src bower_components; \
+		$(MAKE); \
+	done
+
+.PHONY: clean watch

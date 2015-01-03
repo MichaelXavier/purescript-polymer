@@ -1,16 +1,20 @@
 module Polymer.Types
     ( ElementName()
     , ElementNameError(..)
+    , AttributeName()
+    , AttributeNameError(..)
     , PolymerElement(..)
-    , PolymerProto(..)
     , PolymerElementError(..)
     , elementNameStr
     , mkElementName
+    , mkAttributeName
+    , attributeNameStr
     ) where
 
 -------------------------------------------------------------------------------
 import Data.Either
 import qualified Data.String as S
+import qualified Data.StrMap as SM
 import Text.Smolder.Markup
 -------------------------------------------------------------------------------
 import Polymer.Util
@@ -39,12 +43,33 @@ mkElementName s
 
 
 -------------------------------------------------------------------------------
---TODO: smart constructor
-data PolymerElement = PolymerElement ElementName Markup PolymerProto
+newtype AttributeName = AttributeName String
 
 
 -------------------------------------------------------------------------------
-data PolymerProto = PolymerProto
+attributeNameStr :: AttributeName -> String
+attributeNameStr (AttributeName s) = s
+
+
+-------------------------------------------------------------------------------
+mkAttributeName :: String -> Either AttributeNameError AttributeName
+mkAttributeName s
+    | S.null s    = Left ANBlank
+    | selem "-" s = Right $ AttributeName s
+
+
+-------------------------------------------------------------------------------
+data AttributeNameError = ANBlank
+
+
+-------------------------------------------------------------------------------
+--TODO: smart constructor
+newtype PolymerElement = PolymerElement {
+      name :: ElementName
+    , markup :: Markup
+    , attributes :: [AttributeName]
+    --TODO: proto, attributes, etc
+    }
 
 
 -------------------------------------------------------------------------------

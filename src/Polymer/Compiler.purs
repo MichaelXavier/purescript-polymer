@@ -4,6 +4,7 @@ module Polymer.Compiler
     ) where
 
 -------------------------------------------------------------------------------
+import qualified Data.String as S
 import Text.Smolder.Markup
 import Text.Smolder.HTML.Attributes (name)
 import qualified Text.Smolder.Renderer.String as SS
@@ -16,8 +17,16 @@ render :: PolymerElement -> String
 render = SS.render <<< compile
 
 compile :: PolymerElement -> Markup
-compile (PolymerElement n mu proto) = polymerElement n mu
+compile (PolymerElement pe) =
+  polymerElement ! name' pe.name ! attributes pe.attributes $ pe.markup
 
+polymerElement :: Markup -> Markup
+polymerElement = parent "polymer-element"
 
-polymerElement :: ElementName -> Markup -> Markup
-polymerElement n mu = parent "polymer-element" ! name (elementNameStr n) $ mu
+name' :: ElementName -> Attribute
+name' = attribute "name" <<< elementNameStr
+
+attributes :: [AttributeName] -> Attribute
+attributes ans = attribute "attributes" anStr
+  where
+    anStr = S.joinWith " " $ attributeNameStr <$> ans

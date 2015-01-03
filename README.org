@@ -1,3 +1,13 @@
 * Brainstorming
+** compiler
   Could provide a node-based compiler that compiles the template to
   static HTML as well as the JS.
+** Tagless
+   Want a type-checked way of writing expressions, but don't have
+   GADTs
+
+   Been told that Oleg has a paper on "tagless" that helps with this
+
+   in tagless could take a type param for the constructor/foundation
+   datatype, using a ref you must provide a function foundation -> a
+   to get to a Expr a
