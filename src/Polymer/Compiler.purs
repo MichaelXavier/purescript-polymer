@@ -13,10 +13,10 @@ import Polymer.Types
 import Polymer.Util
 -------------------------------------------------------------------------------
 
-render :: PolymerElement -> String
+render :: forall a m. PolymerElement a m -> String
 render = SS.render <<< compile
 
-compile :: PolymerElement -> Markup
+compile :: forall a m. PolymerElement a m -> Markup
 compile (PolymerElement pe) =
   polymerElement ! name' pe.name ! attributes pe.attributes $ pe.markup
 

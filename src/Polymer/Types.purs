@@ -5,6 +5,7 @@ module Polymer.Types
     , AttributeNameError(..)
     , PolymerElement(..)
     , PolymerElementError(..)
+    , Proto(..)
     , elementNameStr
     , mkElementName
     , mkAttributeName
@@ -12,6 +13,7 @@ module Polymer.Types
     ) where
 
 -------------------------------------------------------------------------------
+import Control.Monad.State.Trans
 import Data.Either
 import qualified Data.String as S
 import qualified Data.StrMap as SM
@@ -71,13 +73,20 @@ instance showAttributeNameError :: Show AttributeNameError where
 
 -------------------------------------------------------------------------------
 --TODO: smart constructor
-newtype PolymerElement = PolymerElement {
+newtype PolymerElement a m = PolymerElement {
       name :: ElementName
       --TODO: maybe have a separate property for template? do you
       --always want a template?
     , markup :: Markup
     , attributes :: [AttributeName]
-    --TODO: proto, attributes, etc
+    , proto :: Proto a m
+    }
+
+
+-------------------------------------------------------------------------------
+newtype Proto a m = Proto {
+      state :: a -- Ehhh
+    , methods :: SM.StrMap (StateT a m Unit) -- need a way to resolve references to the compiled module
     }
 
 

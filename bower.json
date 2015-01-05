@@ -23,6 +23,8 @@
     "purescript-either": "~0.1.4",
     "purescript-strings": "~0.4.2",
     "purescript-maps": "~0.1.5",
-    "purescript-exists": "~0.1.0"
+    "purescript-exists": "~0.1.0",
+    "purescript-transformers": "~0.3.2",
+    "purescript-foldable-traversable": "~0.2.1"
   }
 }

@@ -1,8 +1,31 @@
 module Polymer.Expression where
 
 -------------------------------------------------------------------------------
-data ProtoAttr proto a = ProtoAttr String (proto -> a)
+newtype Prop a b = Prop (a -> b)
 
+instance semigroupoidProp :: Semigroupoid Prop where
+  (<<<) (Prop f) (Prop g) = Prop (f <<< g)
+
+instance categoryProp :: Category Prop where
+  id = Prop id
+
+
+--WARNING: meant to be used in Compiler with either ES6 proxy support
+--or (more likely) node --harmony-proxies
+
+foreign import propPath """
+  function propPath(f) {
+    var path = [],
+        proxy = Proxy.create({
+          get: function(_, prop) {
+            path.push(prop);
+            return proxy;
+          }
+        });
+    f(proxy);
+    return path.join('.');
+  }
+""" :: forall a b. (Prop a b) -> String
 
 -------------------------------------------------------------------------------
 class E (i :: * -> *) where
@@ -29,7 +52,8 @@ class E (i :: * -> *) where
   or ::  i Boolean -> i Boolean -> i Boolean
   tern ::  forall a. i Boolean -> i a -> i a -> i a
 
-  ref :: forall proto a. ProtoAttr proto a -> i a
+  --TODO: need some way to tie the prop to the prototype
+  ref :: forall a b. Prop a b -> i b
   --TODO: function application, deep paths
 
 -------------------------------------------------------------------------------
@@ -63,7 +87,7 @@ instance ePretty :: E PP where
   or = binop "||"
   tern p a b = PP $ runPP p ++ " ? " ++ runPP a ++ " : " ++ runPP b
 
-  ref (ProtoAttr s _) = PP s
+  ref p = PP $ propPath p
 
 
 -------------------------------------------------------------------------------
@@ -75,19 +99,5 @@ runPP (PP a) = a
 renderExpression :: forall a. Expression a -> String
 renderExpression e = "{{" ++ runPP e ++ "}}"
 
-
--------------------------------------------------------------------------------
---TODO: drop this example code
-data MyProto = MyProto Boolean
-
-protoVal (MyProto n) = n
-
-protoValAttr = ProtoAttr "protoVal" protoVal
-
-example :: String
-example = runPP $ ((lit 5 `minus` lit 2) `mod` (lit 2)) `gte` lit 3
-
-
--------------------------------------------------------------------------------
-type Expression a = PP a
+type Expression = PP
 

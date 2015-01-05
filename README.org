@@ -11,3 +11,16 @@
    in tagless could take a type param for the constructor/foundation
    datatype, using a ref you must provide a function foundation -> a
    to get to a Expr a
+** Lightweight expression paths
+   foo.bar.baz
+
+   could do something like
+   newtype Property a b = Property (a -> b)
+   In es6, could use proxy to infer the property name from this
+   object a-la method_missing.
+** Compile-time/render time
+   compile time may need to run with --harmony_proxy
+   compile time takes the PolymerElement and produces a String or
+   Markup
+
+   render-time takes the PolymerElement and exports a constructor (an Eff)
