@@ -19,7 +19,7 @@
   ],
   "dependencies": {
     "polymer": "~0.5.2",
-    "purescript-smolder": "~1.0.2",
+    "purescript-smolder": "MichaelXavier/purescript-smolder#pretty-print",
     "purescript-either": "~0.1.4",
     "purescript-strings": "~0.4.2",
     "purescript-maps": "~0.1.5",

@@ -14,7 +14,9 @@ import Polymer.Util
 -------------------------------------------------------------------------------
 
 render :: forall a m. PolymerElement a m -> String
-render = SS.render <<< compile
+render = SS.prettyPrint options <<< compile
+  where
+    options = SS.PPOptions { indentStr: "  "}
 
 compile :: forall a m. PolymerElement a m -> Markup
 compile (PolymerElement pe) =

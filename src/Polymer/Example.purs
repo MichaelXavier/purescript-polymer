@@ -27,7 +27,9 @@ newtype MyState = MyState {
     }
 
 titleProp = Prop (\(MyState s) -> s.title)
-nestedStringProp = Prop (\(MyState s) -> s.nested.string)
+nestedProp = Prop (\(MyState s) -> s.nested)
+stringProp = Prop (\s -> s.string)
+nestedStringProp = nestedProp >>> stringProp
 
 
 -------------------------------------------------------------------------------
