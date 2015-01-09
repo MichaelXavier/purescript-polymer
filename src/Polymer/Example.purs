@@ -33,7 +33,7 @@ nestedStringProp = nestedProp >>> stringProp
 
 
 -------------------------------------------------------------------------------
-mkEl :: Either String (PolymerElement MyState Identity)
+mkEl :: forall e. Either String (PolymerElement MyState (| e))
 mkEl = do
   n <- showErr $ mkElementName "my-element"
   msg <- showErr $ mkAttributeName "name"
@@ -44,7 +44,7 @@ mkEl = do
                           }
 
 
-myProto :: Proto MyState Identity
+myProto :: forall e. Proto MyState (| e)
 myProto = Proto { state: MyState { title: "My Element", nested: { string: "ahoy"}}
                 , methods: SM.empty
                 }

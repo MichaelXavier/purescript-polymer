@@ -6,7 +6,10 @@ module Polymer.Types
     , PolymerElement(..)
     , PolymerElementError(..)
     , Proto(..)
+    , protoState
+    , protoMethods
     , PolymerScope()
+    , PolymerMethod(..)
     , unPolymerScope
     , elementNameStr
     , mkElementName
@@ -15,7 +18,9 @@ module Polymer.Types
     ) where
 
 -------------------------------------------------------------------------------
-import Control.Monad.State.Trans
+import Control.Monad.Eff
+import Control.Monad.Eff.Ref
+import Control.Monad.Reader.Trans
 import Data.Either
 import qualified Data.String as S
 import qualified Data.StrMap as SM
@@ -96,21 +101,31 @@ unPolymerScope (PolymerScope a) = a
 
 -------------------------------------------------------------------------------
 --TODO: smart constructor
-newtype PolymerElement st m = PolymerElement {
+newtype PolymerElement st e = PolymerElement {
       name :: ElementName
       --TODO: maybe have a separate property for template? do you
       --always want a template?
     , markup :: PolymerScope st Markup
-    , attributes :: [AttributeName]
-    , proto :: Proto st m
+    , attributes :: [AttributeName] --TODO: cross ref attributes with proto
+    , proto :: Proto st e
     }
+
+
+type PolymerMethod st e = ReaderT (RefVal st) (Eff (ref :: Ref | e)) Unit
 
 
 -------------------------------------------------------------------------------
-newtype Proto st m = Proto {
+newtype Proto st e = Proto {
       state :: st -- Ehhh
-    , methods :: SM.StrMap (StateT st m Unit) -- need a way to resolve references to the compiled module
+    , methods :: SM.StrMap (PolymerMethod st e)
+    -- , methods :: SM.StrMap (ReaderT (RefVal st) (Eff e) Unit)
+      -- TODO need a way to resolve references to the compiled module
+      -- methods need to also not share keys with state keys
+      -- also can't take arguments
     }
+
+protoState (Proto p) = p.state
+protoMethods (Proto p) = p.methods
 
 
 -------------------------------------------------------------------------------
