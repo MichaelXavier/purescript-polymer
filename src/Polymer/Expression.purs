@@ -12,7 +12,6 @@ instance categoryProp :: Category Prop where
 
 --WARNING: meant to be used in Compiler with either ES6 proxy support
 --or (more likely) node --harmony-proxies
-
 foreign import propPath """
   function propPath(f) {
     var path = [],
@@ -28,36 +27,36 @@ foreign import propPath """
 """ :: forall a b. (Prop a b) -> String
 
 -------------------------------------------------------------------------------
-class E (i :: * -> *) where
-  lit :: forall a. (Show a) => a -> i a
+class E (i :: * -> * -> *) where
+  lit :: forall p a. (Show a) => a -> i p a
 
   -- comparison
-  eq :: forall b. (Eq b) => i b -> i b -> i Boolean
-  neq :: forall b. (Eq b) => i b -> i b -> i Boolean
-  lt :: forall b. (Ord b) => i b -> i b -> i Boolean
-  lte :: forall b. (Ord b) => i b -> i b -> i Boolean
-  gt :: forall b. (Ord b) => i b -> i b -> i Boolean
-  gte :: forall b. (Ord b) => i b -> i b -> i Boolean
+  eq :: forall p b. (Eq b) => i p b -> i p b -> i p Boolean
+  neq :: forall p b. (Eq b) => i p b -> i p b -> i p Boolean
+  lt :: forall p b. (Ord b) => i p b -> i p b -> i p Boolean
+  lte :: forall p b. (Ord b) => i p b -> i p b -> i p Boolean
+  gt :: forall p b. (Ord b) => i p b -> i p b -> i p Boolean
+  gte :: forall p b. (Ord b) => i p b -> i p b -> i p Boolean
 
   -- math, TODO: group
-  plus :: i Number -> i Number -> i Number
-  minus :: i Number -> i Number -> i Number
-  mult :: i Number -> i Number -> i Number
-  div' :: i Number -> i Number -> i Number
-  mod:: i Number -> i Number -> i Number
+  plus :: forall p. i p Number -> i p Number -> i p Number
+  minus :: forall p. i p Number -> i p Number -> i p Number
+  mult :: forall p. i p Number -> i p Number -> i p Number
+  div' :: forall p. i p Number -> i p Number -> i p Number
+  mod:: forall p. i p Number -> i p Number -> i p Number
 
   -- Boolean logic
-  not' :: i Boolean -> i Boolean
-  and ::  i Boolean -> i Boolean -> i Boolean
-  or ::  i Boolean -> i Boolean -> i Boolean
-  tern ::  forall a. i Boolean -> i a -> i a -> i a
+  not' :: forall p. i p Boolean -> i p Boolean
+  and :: forall p. i p Boolean -> i p Boolean -> i p Boolean
+  or :: forall p. i p Boolean -> i p Boolean -> i p Boolean
+  tern :: forall p a. i p Boolean -> i p a -> i p a -> i p a
 
   --TODO: need some way to tie the prop to the prototype
-  ref :: forall a b. Prop a b -> i b
+  ref :: forall p b. Prop p b -> i p b
   --TODO: function application, deep paths
 
 -------------------------------------------------------------------------------
-newtype PP a = PP String
+newtype PP p a = PP String
 
 binop op a b = grouped $ runPP a ++ " " ++ op ++ " " ++ runPP b
 
@@ -96,7 +95,7 @@ runPP (PP a) = a
 
 -------------------------------------------------------------------------------
 --TODO: only export this
-renderExpression :: forall a. Expression a -> String
+renderExpression :: forall p a. Expression p a -> String
 renderExpression e = "{{" ++ runPP e ++ "}}"
 
 type Expression = PP

@@ -4,7 +4,7 @@ module Polymer.Example where
 -------------------------------------------------------------------------------
 import Data.Identity
 import Data.Either
-import Text.Smolder.HTML
+import Text.Smolder.HTML (h1, h2, h3)
 import Text.Smolder.Markup
 import qualified Data.StrMap as SM
 -------------------------------------------------------------------------------
@@ -55,10 +55,19 @@ renderEl = render <$> mkEl
 
 
 -------------------------------------------------------------------------------
-markup :: Markup
+embed :: forall p a. Expression p a -> PolymerScope p String
+embed  = return <<< renderExpression
+
+
+-------------------------------------------------------------------------------
+markup :: PolymerScope MyState Markup
 markup = do
-  template do
-    h1 $ expr $ lit 5
-    --TODO: tie proto to PolymerElement
-    h2 $ expr $ ref titleProp
-    h3 $ expr $ ref nestedStringProp
+  tp <- embed $ ref titleProp
+  nsp <- embed $ ref nestedStringProp
+  five <- embed $ lit 5
+  return $ do
+    template do
+      h1 $ text five
+      --TODO: tie proto to PolymerElement
+      h2 $ text tp
+      h3 $ text nsp

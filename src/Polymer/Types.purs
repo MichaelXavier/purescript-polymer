@@ -6,6 +6,8 @@ module Polymer.Types
     , PolymerElement(..)
     , PolymerElementError(..)
     , Proto(..)
+    , PolymerScope()
+    , unPolymerScope
     , elementNameStr
     , mkElementName
     , mkAttributeName
@@ -72,21 +74,42 @@ instance showAttributeNameError :: Show AttributeNameError where
 
 
 -------------------------------------------------------------------------------
+--TODO: monad instance, don't export constructor. also this is a
+--really silly instance. is there a point to this? Maybe it makes sense if we hide all the rendering functions
+newtype PolymerScope proto a = PolymerScope a
+
+instance functorPolymerScope :: Functor (PolymerScope p) where
+  (<$>) f (PolymerScope x) = PolymerScope (f x)
+
+instance applyPolymerScope :: Apply (PolymerScope p) where
+  (<*>) (PolymerScope f) (PolymerScope a) = PolymerScope (f a)
+
+instance bindPolymerScope :: Bind (PolymerScope p) where
+  (>>=) (PolymerScope a) f = f a
+
+instance applicativePolymerScope :: Applicative (PolymerScope p) where
+  pure = PolymerScope
+
+instance monadPolymerScope :: Monad (PolymerScope p)
+
+unPolymerScope (PolymerScope a) = a
+
+-------------------------------------------------------------------------------
 --TODO: smart constructor
-newtype PolymerElement a m = PolymerElement {
+newtype PolymerElement st m = PolymerElement {
       name :: ElementName
       --TODO: maybe have a separate property for template? do you
       --always want a template?
-    , markup :: Markup
+    , markup :: PolymerScope st Markup
     , attributes :: [AttributeName]
-    , proto :: Proto a m
+    , proto :: Proto st m
     }
 
 
 -------------------------------------------------------------------------------
-newtype Proto a m = Proto {
-      state :: a -- Ehhh
-    , methods :: SM.StrMap (StateT a m Unit) -- need a way to resolve references to the compiled module
+newtype Proto st m = Proto {
+      state :: st -- Ehhh
+    , methods :: SM.StrMap (StateT st m Unit) -- need a way to resolve references to the compiled module
     }
 
 

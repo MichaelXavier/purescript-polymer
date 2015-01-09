@@ -20,7 +20,7 @@ render = SS.prettyPrint options <<< compile
 
 compile :: forall a m. PolymerElement a m -> Markup
 compile (PolymerElement pe) =
-  polymerElement ! name' pe.name ! attributes pe.attributes $ pe.markup
+  polymerElement ! name' pe.name ! attributes pe.attributes $ unPolymerScope pe.markup
 
 polymerElement :: Markup -> Markup
 polymerElement = parent "polymer-element"
