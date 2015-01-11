@@ -1,0 +1,25 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "homepage": "https://github.com/MichaelXavier/purescript-polymer",
+  "authors": [
+    "Michael Xavier <michael@michaelxavier.net>"
+  ],
+  "description": "An example project using polymer-purescript",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "purescript-timers": "~0.0.8",
+    "purescript-maps": "~0.2.0"
+  }
+}

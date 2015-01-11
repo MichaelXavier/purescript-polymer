@@ -1,3 +1,4 @@
+--TODO: deprecated in favor of examples dir
 module Polymer.Example where
 
 
@@ -49,14 +50,11 @@ myProto = Proto { state: MyState { title: "My Element", nested: { string: "ahoy"
                 , methods: SM.empty
                 }
 
+
 -------------------------------------------------------------------------------
 renderEl :: Either String String
 renderEl = render <$> mkEl
 
-
--------------------------------------------------------------------------------
-embed :: forall p a. Expression p a -> PolymerScope p String
-embed  = return <<< renderExpression
 
 
 -------------------------------------------------------------------------------

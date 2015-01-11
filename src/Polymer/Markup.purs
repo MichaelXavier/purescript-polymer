@@ -1,5 +1,6 @@
 module Polymer.Markup
     ( template
+    , embed
     ) where
 
 
@@ -7,6 +8,7 @@ module Polymer.Markup
 import Text.Smolder.Markup
 -------------------------------------------------------------------------------
 import Polymer.Expression
+import Polymer.Types
 -------------------------------------------------------------------------------
 
 -- expr :: forall a. Expression a -> Markup
@@ -20,3 +22,8 @@ import Polymer.Expression
 
 template :: Markup -> Markup
 template = parent "template"
+
+
+-------------------------------------------------------------------------------
+embed :: forall p a. Expression p a -> PolymerScope p String
+embed  = return <<< renderExpression

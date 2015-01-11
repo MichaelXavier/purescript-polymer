@@ -1,6 +1,7 @@
 module Polymer.Expression where
 
 -------------------------------------------------------------------------------
+--TODO: move to types
 newtype Prop a b = Prop (a -> b)
 
 instance semigroupoidProp :: Semigroupoid Prop where
